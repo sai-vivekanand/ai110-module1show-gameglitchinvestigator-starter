@@ -25,9 +25,24 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+**Game purpose:**
+A number guessing game where the player tries to guess a randomly chosen secret number within a set number of attempts. The game gives "Go Higher" or "Go Lower" hints after each guess and tracks a score across attempts.
+
+**Bugs found:**
+
+1. **Swapped hint messages** — `check_guess` returned "Go HIGHER!" when the guess was too high and "Go LOWER!" when it was too low. The outcome labels ("Too High" / "Too Low") were correct, but the human-readable hint strings were paired to the wrong outcomes.
+
+2. **No input range validation** — `parse_guess` accepted any integer, including negative numbers and values far above the valid range. Entering `-5` or `9999` was treated as a valid guess with no error shown to the player.
+
+3. **Even-attempt string casting** — On every even-numbered attempt, `app.py` silently converted the secret number to a string before passing it to `check_guess`. This caused Python's alphabetical string comparison (`"9" > "42"` → `True`) instead of numeric comparison, producing wrong hints on every other guess. A `try/except TypeError` block was masking the crash this caused rather than fixing the root problem.
+
+**Fixes applied:**
+
+- Corrected the hint messages in `check_guess` in `logic_utils.py` so "Go LOWER!" is returned when the guess exceeds the secret and "Go HIGHER!" when it falls short.
+- Added a bounds check in `parse_guess` that rejects any value outside `[low, high]` and returns a descriptive error message to the player.
+- Removed the even-attempt `if/else` block in `app.py` that was casting the secret to a string, and removed the now-unnecessary `try/except TypeError` from `check_guess`.
+- Moved all four logic functions (`get_range_for_difficulty`, `parse_guess`, `check_guess`, `update_score`) out of `app.py` into `logic_utils.py` to separate game logic from UI code.
+- Fixed and expanded the pytest suite in `tests/test_game_logic.py` with 7 regression tests, one per bug per scenario, all passing.
 
 ## 📸 Demo
 
