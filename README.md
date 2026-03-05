@@ -35,6 +35,8 @@ A number guessing game where the player tries to guess a randomly chosen secret 
 2. **No input range validation** — `parse_guess` accepted any integer, including negative numbers and values far above the valid range. Entering `-5` or `9999` was treated as a valid guess with no error shown to the player.
 
 3. **Even-attempt string casting** — On every even-numbered attempt, `app.py` silently converted the secret number to a string before passing it to `check_guess`. This caused Python's alphabetical string comparison (`"9" > "42"` → `True`) instead of numeric comparison, producing wrong hints on every other guess. A `try/except TypeError` block was masking the crash this caused rather than fixing the root problem.
+4. <img width="1020" height="156" alt="image" src="https://github.com/user-attachments/assets/9f54cd37-42e6-4b99-8a5c-66a0b3da130e" />
+
 
 **Fixes applied:**
 
