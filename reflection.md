@@ -41,15 +41,18 @@ For Bug 3 (string comparison), I wrote `test_single_digit_vs_two_digit_high`, wh
 
 ## 4. What did you learn about Streamlit and state?
 
-- In your own words, explain why the secret number kept changing in the original app.
-- How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
-- What change did you make that finally gave the game a stable secret number?
+Every time you click a button in Streamlit, the entire script reruns from the top. So in the original app, the line `secret = random.randint(low, high)` was just sitting at the top with no guard — meaning every single click picked a brand new number. The game was basically impossible to win because the target kept changing underneath you.
+
+The way I'd explain it to a friend: imagine every button click refreshes the whole page, like hitting F5 in a browser. If your secret number lives in a regular variable, it gets wiped on every refresh. `st.session_state` is like a sticky note that survives those refreshes — you write to it once and it stays there until you deliberately clear it.
+
+The fix was wrapping the secret generation in `if "secret" not in st.session_state:` so it only runs the first time the app loads, not on every rerun. Once that guard was in place the secret stayed locked in for the whole game.
 
 ---
 
 ## 5. Looking ahead: your developer habits
 
-- What is one habit or strategy from this project that you want to reuse in future labs or projects?
-  - This could be a testing habit, a prompting strategy, or a way you used Git.
-- What is one thing you would do differently next time you work with AI on a coding task?
-- In one or two sentences, describe how this project changed the way you think about AI generated code.
+One habit I want to keep is writing a regression test right after fixing a bug, not after the whole project is done. On this project, writing `test_single_digit_vs_two_digit_high` immediately after fixing the string-casting bug made me way more confident the fix was real — not just "it looks right in the code." If that test existed before the fix, it would have caught the bug instantly.
+
+Next time I work with AI I'd slow down before accepting a suggestion and ask "does this fix the symptom or the actual cause?" Claude told me to remove the `try/except` and I almost just did it without questioning why it was there in the first place. Taking 30 seconds to trace where `secret` was coming from is what led me to the real bug in `app.py`.
+
+Honestly this project made me trust AI-generated code a lot less than I did before — not in a bad way, more in a healthy way. The bugs here weren't random typos, they were subtle logic mistakes that looked totally fine at first glance. AI can write code fast but it can also confidently write code that's wrong, so treating every output as "probably needs review" feels like the right default now.
