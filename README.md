@@ -49,6 +49,8 @@ A number guessing game where the player tries to guess a randomly chosen secret 
 ## 📸 Demo
 
 - [ ] [Insert a screenshot of your fixed, winning game here]
+- [ ] <img width="1379" height="828" alt="image" src="https://github.com/user-attachments/assets/68c9fce4-3787-46bf-8f33-90885aa9108e" />
+
 
 ## 🚀 Stretch Features
 
